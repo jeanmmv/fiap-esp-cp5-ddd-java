@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.application.dto;
+import br.com.fiap.bank.core.domain.Cliente; import java.math.BigDecimal; import java.time.LocalDate; public record ClienteResponse(Long id,String cpf,String nome,String email,LocalDate dataNascimento,BigDecimal rendaMensal) { public static ClienteResponse from(Cliente c){return new ClienteResponse(c.id(),c.cpf(),c.nome(),c.email(),c.dataNascimento(),c.rendaMensal());} }

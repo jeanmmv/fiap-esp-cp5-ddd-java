@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.infrastructure;
+import jakarta.persistence.*;import java.math.BigDecimal;import br.com.fiap.bank.core.domain.TipoConta; @Entity @Table(name="contas") public class ContaJpa { @Id public String numeroConta; public String cpfCliente;public String agencia;@Enumerated(EnumType.STRING) public TipoConta tipoConta;public BigDecimal saldo;public boolean ativa; }

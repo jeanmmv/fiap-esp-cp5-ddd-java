@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.infrastructure;
+import org.springframework.data.jpa.repository.JpaRepository;import java.util.Optional; public interface ClienteSpringRepository extends JpaRepository<ClienteJpa,Long>{Optional<ClienteJpa> findByCpf(String cpf);}

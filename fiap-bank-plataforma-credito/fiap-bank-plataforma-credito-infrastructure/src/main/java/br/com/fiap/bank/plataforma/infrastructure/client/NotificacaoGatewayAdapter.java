@@ -1,0 +1,2 @@
+package br.com.fiap.bank.plataforma.infrastructure.client;
+import br.com.fiap.bank.plataforma.domain.NotificacaoGateway; import org.slf4j.Logger; import org.slf4j.LoggerFactory; import org.springframework.stereotype.Component; @Component public class NotificacaoGatewayAdapter implements NotificacaoGateway { private static final Logger log=LoggerFactory.getLogger(NotificacaoGatewayAdapter.class); public void enviar(String cpf,String mensagem){log.info("Notificação simulada para CPF {}: {}",cpf,mensagem);} }

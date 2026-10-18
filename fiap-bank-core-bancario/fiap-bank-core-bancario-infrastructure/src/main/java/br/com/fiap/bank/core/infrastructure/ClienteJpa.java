@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.infrastructure;
+import jakarta.persistence.*; import java.time.LocalDate;import java.math.BigDecimal; @Entity @Table(name="clientes") public class ClienteJpa { @Id @GeneratedValue(strategy=GenerationType.IDENTITY) public Long id; @Column(unique=true,nullable=false) public String cpf; public String nome;public String email;public LocalDate dataNascimento;public BigDecimal rendaMensal; }

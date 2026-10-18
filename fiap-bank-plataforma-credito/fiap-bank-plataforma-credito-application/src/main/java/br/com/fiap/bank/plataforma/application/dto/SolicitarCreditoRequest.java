@@ -1,0 +1,2 @@
+package br.com.fiap.bank.plataforma.application.dto;
+import jakarta.validation.constraints.*; import java.math.BigDecimal; public record SolicitarCreditoRequest(@NotBlank @Pattern(regexp="\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}") String cpfCliente,@NotBlank @Size(min=2,max=120) String nomeCliente,@NotBlank @Size(min=3,max=60) String tipoCredito,@NotNull @DecimalMin(value="0.01") BigDecimal valorSolicitado,@NotNull @Min(1) @Max(600) Integer quantidadeParcelas,@NotNull @DecimalMin(value="0.00") BigDecimal rendaMensal) {}
