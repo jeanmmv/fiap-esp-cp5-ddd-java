@@ -1,0 +1,2 @@
+package br.com.fiap.bank.plataforma.infrastructure.persistence;
+import org.springframework.data.jpa.repository.JpaRepository; import java.util.List; public interface SpringDataSolicitacaoRepository extends JpaRepository<SolicitacaoCreditoJpaEntity,Long> { List<SolicitacaoCreditoJpaEntity> findAllByOrderByDataSolicitacaoDesc(); List<SolicitacaoCreditoJpaEntity> findByCpfClienteOrderByDataSolicitacaoDesc(String cpfCliente); }

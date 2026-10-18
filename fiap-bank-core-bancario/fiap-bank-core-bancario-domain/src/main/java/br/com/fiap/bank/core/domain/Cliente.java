@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.domain;
+import java.time.LocalDate; import java.math.BigDecimal; public record Cliente(Long id,String cpf,String nome,String email,LocalDate dataNascimento,BigDecimal rendaMensal) {}

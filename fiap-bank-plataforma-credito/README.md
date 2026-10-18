@@ -1,149 +1,63 @@
-# FIAP Bank - Plataforma de Crédito 💳
+# Plataforma de Crédito — FIAP Bank
 
-Microsserviço de **Esteira e Motor de Decisão de Crédito** do FIAP Bank. Responsável por processar propostas de crédito, avaliar regras de negócio e risco, comunicar-se com o Core Bancário via **Spring Cloud OpenFeign**, simular verificações no SCR (Banco Central) e Bureau de Crédito (Serasa/SPC), e notificar clientes.
+Serviço responsável pelo ciclo de vida das solicitações de crédito: criação, consulta e registro da decisão operacional.
 
-A API foi projetada de forma que todas as operações utilizeßm o método HTTP `POST` com verbos de ação semânticos no path.
+## Responsabilidades
 
----
+- Receber e validar dados de uma solicitação.
+- Orquestrar o caso de uso na camada de aplicação.
+- Persistir as solicitações por meio de um adaptador de repositório.
+- Encaminhar integrações por gateways, mantendo os contratos no domínio.
+- Expor endpoints REST e respostas de erro consistentes.
+- Manter rotas legadas de compatibilidade usadas pelas interfaces existentes.
 
-## 🛠️ Tecnologias Utilizadas
+## Organização
 
-- **Java 21**
-- **Spring Boot 4.1**
-- **Spring Cloud OpenFeign 2024.0.0** (comunicação declarativa com o Core Bancário)
-- **Spring Data JPA**
-- **Spring Boot Actuator**
-- **H2 Database** (em memória)
-- **Maven**
+| Módulo | Responsabilidade |
+|---|---|
+| `fiap-bank-plataforma-credito-domain` | Entidade de domínio, status, contratos de repositório e gateways |
+| `fiap-bank-plataforma-credito-application` | Casos de uso e DTOs de aplicação |
+| `fiap-bank-plataforma-credito-infrastructure` | Persistência, clientes HTTP/Feign e adaptadores |
+| `fiap-bank-plataforma-credito-presentation` | Controllers REST, validação HTTP e inicialização da aplicação |
 
----
+## Executar
 
-## 📋 Pré-requisitos
-
-- **Java JDK 21** instalado e configurado no `PATH`.
-- **Apache Maven 3.9+** instalado.
-- *(Opcional)* Serviço **Core Bancário** rodando na porta `8080` (caso indisponível, o cliente Feign utiliza dados de fallback automaticamente).
-
----
-
-## 🚀 Como Executar a Aplicação
-
-### 1. Compilar o projeto
-
-Na raiz do diretório `fiap-bank-plataforma-credito`:
+Na pasta deste módulo:
 
 ```bash
-mvn clean compile
-```
-
-### 2. Iniciar a aplicação via Maven
-
-```bash
+mvn clean install
+cd fiap-bank-plataforma-credito-presentation
 mvn spring-boot:run
 ```
 
-### 3. Executar via arquivo JAR
+Por padrão, a API fica disponível em `http://localhost:8081`.
 
-Para gerar o pacote e executar:
+## Endpoints REST
 
-```bash
-mvn clean package -DskipTests
-java -jar target/fiap-bank-plataforma-credito-1.0.0-SNAPSHOT.jar
-```
+| Método | Caminho | Descrição |
+|---|---|---|
+| `POST` | `/api/v1/solicitacoes-credito` | Criar solicitação |
+| `GET` | `/api/v1/solicitacoes-credito` | Listar solicitações; aceita filtro opcional `cpf` |
+| `GET` | `/api/v1/solicitacoes-credito/{id}` | Consultar por identificador |
+| `PUT` | `/api/v1/solicitacoes-credito/{id}/decisao` | Registrar decisão e parecer |
 
-A aplicação estará acessível em: **`http://localhost:8081`**
+### Exemplo de corpo para criar solicitação
 
----
-
-## ⚙️ Variáveis de Ambiente e Configuração
-
-As seguintes propriedades podem ser customizadas no arquivo `src/main/resources/application.yml` ou passadas como variáveis de ambiente:
-
-| Propriedade | Variável de Ambiente | Valor Padrão | Descrição |
-| :--- | :--- | :--- | :--- |
-| `server.port` | `SERVER_PORT` | `8081` | Porta HTTP da aplicação |
-| `core.bancario.url` | `CORE_BANCARIO_URL` | `http://localhost:8080/api/v1` | URL base da API do Core Bancário |
-
----
-
-## 🗄️ Console do Banco de Dados H2
-
-- **URL:** `http://localhost:8081/h2-console`
-- **JDBC URL:** `jdbc:h2:mem:plataformacreditodb`
-- **User Name:** `sa`
-- **Password:** *(deixe em branco)*
-
----
-
-## 🌐 Endpoints Non-RESTful (All POST)
-
-Base URL: `http://localhost:8081/api/credito`
-
-### 1. Solicitar Crédito (Ação: `solicitarCredito`)
-Envia uma nova proposta para o motor de risco de crédito.
-- **Endpoint:** `POST /api/credito/solicitarCredito`
-- **Exemplo de Body:**
 ```json
 {
-  "cpfCliente": "12345678900",
-  "nomeCliente": "Ana Silva",
-  "tipoCredito": "EMPRESTIMO_PESSOAL",
-  "valorSolicitado": 15000.00,
+  "cpfCliente": "12345678901",
+  "nomeCliente": "Cliente de Exemplo",
+  "tipoCredito": "PESSOAL",
+  "valorSolicitado": 5000.00,
   "quantidadeParcelas": 24,
-  "rendaMensal": 7500.00
+  "rendaMensal": 3500.00
 }
 ```
 
-### 2. Consultar Status por CPF (Ação: `consultarStatusCredito`)
-Consulta todas as solicitações de um cliente informado pelo corpo da requisição.
-- **Endpoint:** `POST /api/credito/consultarStatusCredito`
-- **Exemplo de Body:**
-```json
-{
-  "cpfCliente": "12345678900"
-}
-```
+Use dados fictícios ao testar. O exemplo ilustra os campos do contrato; a resposta e o comportamento devem ser confirmados executando a aplicação.
 
-### 3. Listar Todas as Solicitações (Ação: `listarTodasSolicitacoes`)
-Retorna todas as propostas para acompanhamento pela Mesa de Operações.
-- **Endpoint:** `POST /api/credito/listarTodasSolicitacoes`
-- **Body:** `{}` *(ou vazio)*
+## Observações
 
-### 4. Buscar Solicitação por ID (Ação: `buscarSolicitacaoPorId`)
-- **Endpoint:** `POST /api/credito/buscarSolicitacaoPorId`
-- **Exemplo de Body:**
-```json
-{
-  "id": 1
-}
-```
-
-### 5. Aprovar Solicitação (Ação: `aprovarSolicitacao`)
-- **Endpoint:** `POST /api/credito/aprovarSolicitacao`
-- **Exemplo de Body:**
-```json
-{
-  "id": 1,
-  "parecerOperador": "Proposta aprovada conforme política de crédito."
-}
-```
-
-### 6. Reprovar Solicitação (Ação: `reprovarSolicitacao`)
-- **Endpoint:** `POST /api/credito/reprovarSolicitacao`
-- **Exemplo de Body:**
-```json
-{
-  "id": 1,
-  "parecerOperador": "Margem consignável insuficiente."
-}
-```
-
-### 7. Consultar Cliente no Core Bancário (Ação: `consultarClienteCore`)
-Executa a chamada direta ao Core Bancário via Spring Cloud OpenFeign.
-- **Endpoint:** `POST /api/credito/consultarClienteCore`
-- **Exemplo de Body:**
-```json
-{
-  "cpfCliente": "12345678900"
-}
-```
+- Os gateways de SCR, Bureau e notificação fazem parte do cenário de integração da aplicação e não devem ser descritos como acesso real a bases oficiais sem configuração e credenciais apropriadas.
+- A integração com o Core Bancário depende de o serviço correspondente estar disponível e configurado.
+- Consulte [`../COMO_EXECUTAR_E_VALIDAR.md`](../COMO_EXECUTAR_E_VALIDAR.md) para o roteiro integrado.

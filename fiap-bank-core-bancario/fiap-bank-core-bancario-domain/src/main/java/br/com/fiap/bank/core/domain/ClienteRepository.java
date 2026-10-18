@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.domain;
+import java.util.*; public interface ClienteRepository {Cliente save(Cliente c);Optional<Cliente> byId(Long id);Optional<Cliente> byCpf(String cpf);List<Cliente> all();void delete(Long id);}

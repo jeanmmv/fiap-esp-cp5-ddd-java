@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.application.dto;
+import br.com.fiap.bank.core.domain.Conta; import br.com.fiap.bank.core.domain.TipoConta; import java.math.BigDecimal; public record ContaResponse(String numeroConta,String cpfCliente,String agencia,TipoConta tipoConta,BigDecimal saldo,boolean ativa) { public static ContaResponse from(Conta c){return new ContaResponse(c.numeroConta(),c.cpfCliente(),c.agencia(),c.tipoConta(),c.saldo(),c.ativa());} }

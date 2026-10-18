@@ -1,0 +1,2 @@
+package br.com.fiap.bank.plataforma.infrastructure.client;
+import br.com.fiap.bank.plataforma.domain.BureauGateway; import org.springframework.stereotype.Component; @Component public class BureauGatewayAdapter implements BureauGateway { public int consultarScore(String cpf){if(cpf.isEmpty())return 500;int soma=0;for(char c:cpf.toCharArray())soma+=Character.getNumericValue(c);return 400+(soma*9)%551;} }

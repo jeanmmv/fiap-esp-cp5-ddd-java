@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.infrastructure;
+import org.springframework.data.jpa.repository.JpaRepository;import java.util.List;public interface ContaSpringRepository extends JpaRepository<ContaJpa,String>{List<ContaJpa> findByCpfCliente(String cpf);}

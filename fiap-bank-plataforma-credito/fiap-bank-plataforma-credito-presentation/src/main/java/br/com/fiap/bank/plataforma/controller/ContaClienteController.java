@@ -1,0 +1,2 @@
+package br.com.fiap.bank.plataforma.controller;
+import br.com.fiap.bank.plataforma.application.CreditoApplicationService; import org.springframework.web.bind.annotation.*; import java.util.Map; @CrossOrigin(origins = "http://localhost:4200") @RestController public class ContaClienteController {private final CreditoApplicationService service;public ContaClienteController(CreditoApplicationService s){service=s;} @GetMapping("/api/v1/clientes/{cpf}/conta") public Map<String,Object> consultar(@PathVariable String cpf){return service.consultarConta(cpf);} }

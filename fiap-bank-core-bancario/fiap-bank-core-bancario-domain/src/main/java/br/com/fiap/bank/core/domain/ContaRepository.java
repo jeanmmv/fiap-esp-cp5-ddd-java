@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.domain;
+import java.util.*; public interface ContaRepository {Conta save(Conta c);Optional<Conta> byNumero(String numero);List<Conta> byCpf(String cpf);List<Conta> all();}

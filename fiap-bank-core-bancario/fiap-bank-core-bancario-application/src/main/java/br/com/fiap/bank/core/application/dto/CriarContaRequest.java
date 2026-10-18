@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.application.dto;
+import jakarta.validation.constraints.*; import java.math.BigDecimal; public record CriarContaRequest(@NotBlank @Pattern(regexp="\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}") String cpfCliente,@Pattern(regexp="\\d{4}") String agencia,@NotBlank @Pattern(regexp="CORRENTE|POUPANCA|SALARIO") String tipoConta,@NotNull @DecimalMin("0.00") BigDecimal saldoInicial) {}

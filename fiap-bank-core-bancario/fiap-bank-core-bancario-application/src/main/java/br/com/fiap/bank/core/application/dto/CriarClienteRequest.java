@@ -1,0 +1,2 @@
+package br.com.fiap.bank.core.application.dto;
+import jakarta.validation.constraints.*; import java.time.LocalDate; import java.math.BigDecimal; public record CriarClienteRequest(@NotBlank @Pattern(regexp="\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}") String cpf,@NotBlank @Size(min=3,max=150) String nome,@NotBlank @Email String email,@NotNull @Past LocalDate dataNascimento,@NotNull @DecimalMin("0.00") BigDecimal rendaMensal) {}
